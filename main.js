@@ -176,23 +176,24 @@ class SesionWhatsApp {
   }
 
   // ⚠️ Reporta como spam + Bloquea
-    async reportarYbloquear(numeroObjetivo) {
+  async reportarYbloquear(numeroObjetivo) {
     if (this.estado !== 'CONECTADO' || !this.sock) {
       return `❌ [${this.nombre}] No conectado`;
     }
     
     try {
-      // 🧹 Limpieza mejorada del número
+      // 🧹 Limpieza total: quita TODO lo que no sea dígito
       let numeroLimpio = numeroObjetivo.replace(/\D/g, '');
       
-      // Si no tiene código de país, asumimos +51 (Perú)
-      if (!numeroLimpio.startsWith('51') && numeroLimpio.length === 9) {
+      // Si no tiene código de país y tiene 9 dígitos (Perú), agregamos +51
+      if (numeroLimpio.length === 9) {
         numeroLimpio = '51' + numeroLimpio;
       }
       
+      // ✅ Construimos el JID correcto
       const jid = `${numeroLimpio}@s.whatsapp.net`;
       
-      console.log(`🔍 Intentando con JID: ${jid}`);
+      console.log(`🔍 Bloqueando: "${numeroObjetivo}" → JID: ${jid}`);
       
       // 1️⃣ Reportar como spam
       await this.sock.chatModify(
@@ -203,13 +204,14 @@ class SesionWhatsApp {
       // 2️⃣ Bloquear
       await this.sock.updateBlockStatus(jid, 'block');
       
-      console.log(`✅ [${this.nombre}] Reportó y BLOQUEÓ a ${numeroObjetivo} → ${jid}`);
+      console.log(`✅ [${this.nombre}] BLOQUEADO: ${numeroObjetivo}`);
       return `✅ [${this.nombre}] ✅ Reportado + Bloqueado → ${numeroObjetivo}`;
     } catch (error) {
       console.log(`❌ [${this.nombre}] Error: ${error.message}`);
       return `⚠️ [${this.nombre}] Falló: ${error.message.substring(0, 80)}`;
     }
-    }
+     }
+  
   
 
   obtenerEstado() {
