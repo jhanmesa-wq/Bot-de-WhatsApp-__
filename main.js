@@ -231,40 +231,41 @@ const bot = new Bot(TOKEN_TELEGRAM);
 // /start
 bot.command('start', async (ctx) => {
   await ctx.reply(
-    '╭━━━━━━━━━━━━━━━━━━━━╮ +
-' 🤖 BOT DE WHATSAPP
-'╰━━━━━━━━━━━━━━━━━━━━╯+
+    `╭━━━━━━━━━━━━━━━━━━━━╮
+ 🤖 BOT DE WHATSAPP
+╰━━━━━━━━━━━━━━━━━━━━╯
 
-'👋 ¡Hola! Bienvenido
-'Soy tu asistente automatizado. ✨
+👋 ¡Hola! Bienvenido
+Soy tu asistente automatizado. ✨
 
-'╭─── 📱 TELEGRAM ───╮
+╭─── 📱 TELEGRAM ───╮
 
-'🔗 ".code +NUMERO"
-'└─ Generar código de vinculación
+🔗 ".code +NUMERO"
+└─ Generar código de vinculación
 
-'🚫 "/reportar +NUMERO"
-'└─ Reportar y bloquear en TODAS las sesiones
+🚫 "/reportar +NUMERO"
+└─ Reportar y bloquear en TODAS las sesiones
 
-'📊 "/estado"
-'└─ Ver el estado de tus sesiones
+📊 "/estado"
+└─ Ver el estado de tus sesiones
 
-'➕ "/agregar NOMBRE"
-'└─ Agregar una nueva sesión
+➕ "/agregar NOMBRE"
+└─ Agregar una nueva sesión
 
-'╰────────────────────╯
+╰────────────────────╯
 
-'╭─── 💬 WHATSAPP ───╮
+╭─── 💬 WHATSAPP ───╮
 
-'🔗 ".code +NUMERO"
-'└─ Generar código de vinculación
+🔗 ".code +NUMERO"
+└─ Generar código de vinculación
 
-'🚫 ".reportar +NUMERO"
-'└─ Reportar y bloquear
+🚫 ".reportar +NUMERO"
+└─ Reportar y bloquear
 
-'╰────────────────────╯
+╰────────────────────╯
 
-'✨ Selecciona un comando para comenzar.'
+✨ Selecciona un comando para comenzar.`
+    
   );
 });
 
