@@ -176,15 +176,23 @@ class SesionWhatsApp {
   }
 
   // ⚠️ Reporta como spam + Bloquea
-  async reportarYbloquear(numeroObjetivo) {
+    async reportarYbloquear(numeroObjetivo) {
     if (this.estado !== 'CONECTADO' || !this.sock) {
       return `❌ [${this.nombre}] No conectado`;
     }
     
     try {
-      const jid = numeroObjetivo.includes('@') 
-        ? numeroObjetivo 
-        : `${limpiarNumero(numeroObjetivo)}@s.whatsapp.net`;
+      // 🧹 Limpieza mejorada del número
+      let numeroLimpio = numeroObjetivo.replace(/\D/g, '');
+      
+      // Si no tiene código de país, asumimos +51 (Perú)
+      if (!numeroLimpio.startsWith('51') && numeroLimpio.length === 9) {
+        numeroLimpio = '51' + numeroLimpio;
+      }
+      
+      const jid = `${numeroLimpio}@s.whatsapp.net`;
+      
+      console.log(`🔍 Intentando con JID: ${jid}`);
       
       // 1️⃣ Reportar como spam
       await this.sock.chatModify(
@@ -195,12 +203,14 @@ class SesionWhatsApp {
       // 2️⃣ Bloquear
       await this.sock.updateBlockStatus(jid, 'block');
       
-      console.log(`✅ [${this.nombre}] Reportó y BLOQUEÓ a ${numeroObjetivo}`);
+      console.log(`✅ [${this.nombre}] Reportó y BLOQUEÓ a ${numeroObjetivo} → ${jid}`);
       return `✅ [${this.nombre}] ✅ Reportado + Bloqueado → ${numeroObjetivo}`;
     } catch (error) {
-      return `⚠️ [${this.nombre}] Falló: ${error.message.substring(0, 60)}`;
+      console.log(`❌ [${this.nombre}] Error: ${error.message}`);
+      return `⚠️ [${this.nombre}] Falló: ${error.message.substring(0, 80)}`;
     }
-  }
+    }
+  
 
   obtenerEstado() {
     if (this.estado === 'CONECTADO') return '✅ CONECTADO';
@@ -221,15 +231,40 @@ const bot = new Bot(TOKEN_TELEGRAM);
 // /start
 bot.command('start', async (ctx) => {
   await ctx.reply(
-    '👋 ¡Hola! Soy tu bot de WhatsApp\n\n' +
-    '📱 Telegram:\n' +
-    '.code +NUMERO → Generar código de vinculación\n' +
-    '/reportar +NUMERO → Reportar y bloquear en TODAS las sesiones\n' +
-    '/estado → Ver estado de sesiones\n' +
-    '/agregar NOMBRE → Agregar sesión nueva\n\n' +
-    '💬 En WhatsApp:\n' +
-    '.code +NUMERO → Generar código\n' +
-    '.reportar +NUMERO → Reportar y bloquear'
+    '╭━━━━━━━━━━━━━━━━━━━━╮ +
+' 🤖 BOT DE WHATSAPP
+'╰━━━━━━━━━━━━━━━━━━━━╯+
+
+'👋 ¡Hola! Bienvenido
+'Soy tu asistente automatizado. ✨
+
+'╭─── 📱 TELEGRAM ───╮
+
+'🔗 ".code +NUMERO"
+'└─ Generar código de vinculación
+
+'🚫 "/reportar +NUMERO"
+'└─ Reportar y bloquear en TODAS las sesiones
+
+'📊 "/estado"
+'└─ Ver el estado de tus sesiones
+
+'➕ "/agregar NOMBRE"
+'└─ Agregar una nueva sesión
+
+'╰────────────────────╯
+
+'╭─── 💬 WHATSAPP ───╮
+
+'🔗 ".code +NUMERO"
+'└─ Generar código de vinculación
+
+'🚫 ".reportar +NUMERO"
+'└─ Reportar y bloquear
+
+'╰────────────────────╯
+
+'✨ Selecciona un comando para comenzar.'
   );
 });
 
